@@ -1,32 +1,73 @@
-# Selenium-TestNG-Multi-Website-Framework
+> **Note:** This framework is a work in progress. Features and documentation may change.
+
+# Selenium-TestNG-Framework
 
 ## 🚀 Overview
-A robust, scalable test automation framework built with Selenium WebDriver and TestNG, designed to test multiple web applications efficiently. This framework demonstrates enterprise-level automation practices and can be easily extended to support new websites.
+A scalable test automation framework using Selenium WebDriver and TestNG for multi-website testing.
 
 ## 🎯 Key Features
-- **Multi-Website Support** - Single framework for testing different web applications
-- **Page Object Model** - Clean separation of page elements and test logic
-- **Parallel Execution** - TestNG parallel testing for faster execution
-- **Cross-Browser Testing** - Chrome, Firefox, Edge support
-- **Data-Driven Testing** - Excel/Properties file integration
-- **Smart Wait Strategies** - Explicit waits for reliable test execution
-- **Screenshot on Failure** - Automatic capture for debugging
-- **Configurable Execution** - Properties-based configuration
-- **Maven Integration** - Easy dependency management
+- Multi-website support
+- Page Object Model
+- Parallel and cross-browser execution
+- Data-driven testing (Excel/Properties)
+- Smart wait strategies
+- Screenshot on failure
+- Configurable via properties files
+- Maven integration
+- Enhanced logging with test case name, class, line number, and timestamp
 
-## 🛠️ Technologies Used
-- Java 11
-- Selenium WebDriver 4.x
-- TestNG 7.x
-- Maven
-- WebDriverManager
-- Apache POI
-- ExtentReports
-
-## 📊 Test Coverage
-Currently supports testing of:
-- Authentication workflows
-- Form interactions
-- Dynamic content handling
-- File upload/download scenarios
-- Dropdown and multi-select operations
+## 🏗️ Project Structure
+```
+Selenium-TestNG-Framework/
+├─ pom.xml
+├─ testng.xml
+├─ logs/
+│  └─ framework.log                  # runtime log output (git-ignored)
+├─ test-suites/                      # additional suite XMLs (optional)
+│  ├─ smoke.xml
+│  └─ regression.xml
+├─ test-output/                      # reports/screenshots (generated; git-ignored)
+│  ├─ reports/
+│  └─ screenshots/
+├─ src/
+│  ├─ main/
+│  │  ├─ java/
+│  │  │  └─ com/
+│  │  │     └─ buzzheng/
+│  │  │        ├─ api/              # (future) API automation components
+│  │  │        ├─ config/
+│  │  │        │  └─ Config.java
+│  │  │        ├─ db/               # (future) DB automation components
+│  │  │        ├─ ui/
+│  │  │        │  ├─ component/
+│  │  │        │  │  └─ BaseComponent.java
+│  │  │        │  ├─ driver/
+│  │  │        │  │  └─ WebDriverFactory.java
+│  │  │        │  └─ rahulshetty/
+│  │  │        │     ├─ component/
+│  │  │        │     │  └─ rahulAbstractComponent.java
+│  │  │        │     ├─ page/
+│  │  │        │     │  ├─ AutomaticPracticePage.java
+│  │  │        │     │  └─ WindowPracticePage.java
+│  │  │        │     └─ README.md   # notes for this site’s POMs/components
+│  │  │        └─ utils/
+│  │  │           ├─ ExcelUtils.java
+│  │  │           ├─ LoggerUtil.java
+│  │  │           └─ ScreenshotUtils.java
+│  │  └─ resources/
+│  │     ├─ GlobalData.properties
+│  │     └─ log4j2.xml
+│  └─ test/
+│     ├─ java/
+│     │  └─ com/
+│     │     └─ buzzheng/
+│     │        ├─ rahulshettyacademy/
+│     │        │  └─ AutomaticPracticePageTest.java
+│     │        └─ TestComponents/
+│     │           ├─ BaseTest.java
+│     │           ├─ ExtentReporterNG.java
+│     │           ├─ RetryAnalyzer.java
+│     │           └─ TestListener.java
+│     └─ resources/
+│        └─ testdata/
+```

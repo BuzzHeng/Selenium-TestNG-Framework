@@ -1,6 +1,10 @@
 # Maven build directory
 /target/
 
+#test-output
+
+*.gitignore
+
 # IntelliJ IDEA project files
 .idea/
 *.iml
