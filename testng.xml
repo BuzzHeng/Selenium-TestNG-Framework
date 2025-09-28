@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Automation Suite">
+    <test name="Practice Page Tests">
+        <listeners>
+            <listener class-name="com.buzzheng.TestComponents.TestListener"/>
+        </listeners>
+        <classes>
+            <class name="com.buzzheng.rahulshettyacademy.AutomaticPracticePageTest"/>
+        </classes>
+    </test>
+</suite>
