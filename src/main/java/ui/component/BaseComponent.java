@@ -3,26 +3,40 @@ package ui.component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class BaseComponent {
+public abstract class BaseComponent {
     private static final Logger logger = LogManager.getLogger(BaseComponent.class);
-    WebDriver driver;
-    int timeOut = 5;
+    protected WebDriver driver;
+    protected int timeOut = 5;
 
     public BaseComponent(WebDriver driver) {
         this.driver = driver;
-        logger.info("BaseComponent initialized with driver: {}", driver);
+        PageFactory.initElements(driver, this); // Add this for @FindBy support
+        logger.info("BaseComponent initialized for: {}", this.getClass().getSimpleName());
     }
 
+    // Navigation
     public void navigateTo(String url) {
         logger.info("Navigating to: {}", url);
         driver.get(url);
     }
 
+    public String getCurrentUrl() {
+        return driver.getCurrentUrl();
+    }
+
+    public String getTitle() {
+        String title = driver.getTitle();
+        logger.info("Page title retrieved: {}", title);
+        return title;
+    }
+
+    // Element finding
     public WebElement find(By locator) {
         logger.debug("Finding element by locator: {}", locator);
         try {
@@ -35,9 +49,15 @@ public class BaseComponent {
         }
     }
 
+    // Actions
     public void click(By locator) {
         logger.info("Clicking element: {}", locator);
         find(locator).click();
+    }
+
+    public void click(WebElement element) {
+        logger.info("Clicking element: {}", element);
+        element.click();
     }
 
     public void type(By locator, String text) {
@@ -47,11 +67,23 @@ public class BaseComponent {
         element.sendKeys(text);
     }
 
+    public void type(WebElement element, String text) {
+        logger.info("Typing text into element: {}", element);
+        element.clear();
+        element.sendKeys(text);
+    }
+
     public String getText(By locator) {
         logger.info("Getting text from element: {}", locator);
         String text = find(locator).getText();
-        logger.debug("Text retrieved: '{}' from {}", text, locator);
-        return find(locator).getText();
+        logger.debug("Text retrieved: '{}'", text);
+        return text;
+    }
+
+    public String getText(WebElement element) {
+        String text = element.getText();
+        logger.debug("Text retrieved: '{}'", text);
+        return text;
     }
 
     public boolean isDisplayed(By locator) {
@@ -66,6 +98,16 @@ public class BaseComponent {
         }
     }
 
+    public boolean isDisplayed(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            logger.warn("Element not displayed");
+            return false;
+        }
+    }
+
+    // Wait methods
     public void waitForElementToAppear(By locator) {
         logger.info("Waiting for element to appear: {}", locator);
         new WebDriverWait(driver, Duration.ofSeconds(timeOut))
@@ -74,53 +116,31 @@ public class BaseComponent {
     }
 
     public void waitForElementToAppear(WebElement ele) {
-        logger.info("Waiting for element to appear: {}", ele);
+        logger.info("Waiting for element to appear");
         new WebDriverWait(driver, Duration.ofSeconds(timeOut))
                 .until(ExpectedConditions.visibilityOf(ele));
     }
-
+    public void waitForElementToAppear(WebElement ele, int timeOut) {
+        logger.info("Waiting for element to appear");
+        new WebDriverWait(driver, Duration.ofSeconds(timeOut))
+                .until(ExpectedConditions.visibilityOf(ele));
+    }
     public void waitForElementToAppear(By locator, int timeout) {
-        logger.info("Waiting for element to appear: {}", locator);
+        logger.info("Waiting for element to appear: {} with timeout: {}s", locator, timeout);
         new WebDriverWait(driver, Duration.ofSeconds(timeout))
                 .until(ExpectedConditions.visibilityOfElementLocated(locator));
-        logger.debug("Element appeared: {}", locator);
     }
 
-    public void waitForElementToAppear(WebElement ele, int timeout) {
-        logger.info("Waiting for element to appear: {}", ele);
-        new WebDriverWait(driver, Duration.ofSeconds(timeout))
-                .until(ExpectedConditions.visibilityOf(ele));
-        logger.debug("Element appeared: {}", ele);
-    }
-
-    public void waitForElementToDisappear(By findBy) throws InterruptedException {
+    public void waitForElementToDisappear(By findBy) {
         logger.info("Waiting for element to disappear: {}", findBy);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(findBy));
+        new WebDriverWait(driver, Duration.ofSeconds(timeOut))
+                .until(ExpectedConditions.invisibilityOfElementLocated(findBy));
         logger.debug("Element disappeared: {}", findBy);
     }
-    public void waitForElementToDisappear(WebElement ele) throws InterruptedException {
-        logger.info("Waiting for element to disappear: {}", ele);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
-        wait.until(ExpectedConditions.invisibilityOf(ele));
-        logger.debug("Element disappeared: {}", ele);
-    }
 
-    public void waitForElementToDisappear(By findBy, int timeout) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(findBy));
-    }
-
-    public void waitForElementToDisappear(WebElement ele, int timeout) {
-        logger.info("Waiting for element to disappear: {}", ele);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
-        wait.until(ExpectedConditions.invisibilityOf(ele));
-        logger.debug("Element disappeared: {}", ele);
-    }
-
-    public String getTitle() {
-        String title = driver.getTitle();
-        logger.info("Page title retrieved: {}", title);
-        return title;
+    public void waitForElementToDisappear(WebElement ele) {
+        logger.info("Waiting for element to disappear");
+        new WebDriverWait(driver, Duration.ofSeconds(timeOut))
+                .until(ExpectedConditions.invisibilityOf(ele));
     }
 }

@@ -2,7 +2,8 @@
 /target/
 
 #test-output
-
+test-output
+reports/
 *.gitignore
 
 # IntelliJ IDEA project files
